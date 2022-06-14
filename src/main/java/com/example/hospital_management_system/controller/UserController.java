@@ -46,7 +46,7 @@ public class UserController {
         return new EntityUpdatingResponse<UserDto>().onFailure("User");
     }
 
-    @GetMapping("/users/get")
+    @GetMapping("/users")
     @Operation(summary = "get by user email")
     @PreAuthorize("hasAuthority('admin:write')")
     public ResponseEntity<?> getByEmail(@RequestParam("email") String email) {
