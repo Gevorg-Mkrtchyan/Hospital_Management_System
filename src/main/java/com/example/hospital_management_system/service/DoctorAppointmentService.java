@@ -7,9 +7,6 @@ import com.example.hospital_management_system.repository.DoctorAppointmentReposi
 import com.example.hospital_management_system.repository.RegistrationRepository;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.sql.Date;
 import java.util.List;
 
@@ -26,33 +23,26 @@ public class DoctorAppointmentService {
 
     public List<DoctorAppointment> getFreeTimes(Long doctorId, Date date) {
         Registration registration = registrationRepository.findRegistrationByDoctorIdAndRegDay(doctorId, date);
-
         if (registration == null) {
-            String[] split;
-            String readLine;
-            try {
-                BufferedReader bufferedReader = new BufferedReader(new FileReader
-                        ("src/main/resources/workGraphic.txt"));
-                while (true) {
-                    readLine = bufferedReader.readLine();
-                    if (readLine == null)
-                        break;
-                    split = readLine.split("-");
-                    DoctorAppointment doctorAppointment = new DoctorAppointment();
-                    doctorAppointment.setDate(date);
-                    doctorAppointment.setStartTime(split[0]);
-                    doctorAppointment.setEndTime(split[1]);
-                    doctorAppointmentRepository.save(doctorAppointment);
+            int time = 9;
+            while (time < 18) {
+                if (time == 13) {
+                    time++;
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
+                DoctorAppointment doctorAppointment = new DoctorAppointment();
+                doctorAppointment.setDoctorId(doctorId);
+                doctorAppointment.setDate(date);
+                doctorAppointment.setStartTime(time + ":00");
+                doctorAppointment.setEndTime(time + ":30");
+                doctorAppointmentRepository.save(doctorAppointment);
+                time++;
             }
         }
-        return doctorAppointmentRepository.findDoctorAppointmentByDoctorIdAndDateAndAppointmentStatus(
-                doctorId, date, AppointmentStatus.FREE);
+        return doctorAppointmentRepository.findDoctorAppointmentByDoctorIdAndDateAndAppointmentStatus
+                (doctorId, date, AppointmentStatus.FREE);
+
     }
 }
-
 
 
 

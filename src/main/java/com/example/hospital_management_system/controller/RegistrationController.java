@@ -44,7 +44,7 @@ public class RegistrationController {
         return new EntityCreatingResponse<RegistrationDto>().onSuccess(registrationDtoOptional.get());
     }
 
-    @GetMapping("registrations/get_free/times/{doctorID}/{date}")
+    @GetMapping("registrations/{doctorID}/{date}")
     @Operation(summary = "get free times for date doctor")
     @PreAuthorize("hasAuthority('employee:write')")
     public List<DoctorAppointment> getFreeTimes(@PathVariable("doctorID") Long doctorId,
