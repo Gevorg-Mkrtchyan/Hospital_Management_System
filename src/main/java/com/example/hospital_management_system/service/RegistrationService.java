@@ -66,6 +66,10 @@ public class RegistrationService {
         if (registrationOptional.isEmpty()) {
             return Optional.empty();
         }
+        String chengeTime = registrationOptional.get().getTime();
+        DoctorAppointment doctorAppointmentChenge = doctorAppointmentRepo.
+                findByDoctorIdAndDateAndStartTime(doctorId,registrationDto.getRegDay(),chengeTime);
+        doctorAppointmentChenge.setAppointmentStatus(AppointmentStatus.FREE);
         DoctorAppointment doctorAppointment = doctorAppointmentRepo.findByDoctorIdAndDateAndStartTime(doctorId,
                 registrationDto.getRegDay(), registrationDto.getTime());
         doctorAppointment.setAppointmentStatus(AppointmentStatus.BUSY);
