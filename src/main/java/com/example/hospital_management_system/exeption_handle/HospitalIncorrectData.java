@@ -1,4 +1,4 @@
-package com.example.hospital_management_system.exeption_hendel;
+package com.example.hospital_management_system.exeption_handle;
 
 public class HospitalIncorrectData {
     private String info;
