@@ -51,7 +51,7 @@ public class RegistrationController {
                                                 @PathVariable("date") Date date) {
         return doctorAppointmentService.getFreeTimes(doctorId, date);
     }
-    @GetMapping("registration/{doctorID}/{date}")
+    @PostMapping("registrations/{doctorID}/{date}")
     @Operation(summary = "set free times for date doctor")
     @PreAuthorize("hasAuthority('employee:write')")
     public List<DoctorAppointment> setFreeTimes(@PathVariable("doctorID") Long doctorId,
