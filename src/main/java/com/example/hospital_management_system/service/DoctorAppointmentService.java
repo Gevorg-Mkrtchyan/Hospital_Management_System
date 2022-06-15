@@ -20,8 +20,12 @@ public class DoctorAppointmentService {
         this.registrationRepository = registrationRepository;
         this.doctorAppointmentRepository = doctorAppointmentRepository;
     }
-
     public List<DoctorAppointment> getFreeTimes(Long doctorId, Date date) {
+        Registration registration = registrationRepository.findRegistrationByDoctorIdAndRegDay(doctorId, date);
+        return doctorAppointmentRepository.findDoctorAppointmentByDoctorIdAndDateAndAppointmentStatus
+                (doctorId, date, AppointmentStatus.FREE);
+    }
+    public List<DoctorAppointment> setFreeTimes(Long doctorId, Date date) {
         Registration registration = registrationRepository.findRegistrationByDoctorIdAndRegDay(doctorId, date);
         if (registration == null) {
             int time = 9;
