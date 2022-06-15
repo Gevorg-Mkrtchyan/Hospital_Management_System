@@ -25,11 +25,11 @@ public class DoctorAppointmentService {
         return doctorAppointmentRepository.findDoctorAppointmentByDoctorIdAndDateAndAppointmentStatus
                 (doctorId, date, AppointmentStatus.FREE);
     }
-    public List<DoctorAppointment> setFreeTimes(Long doctorId, Date date) {
+    public List<DoctorAppointment> setFreeTimes(Long doctorId, Date date,Long jobStartTime,Long jobEndTime) {
         Registration registration = registrationRepository.findRegistrationByDoctorIdAndRegDay(doctorId, date);
         if (registration == null) {
-            int time = 9;
-            while (time < 18) {
+            Long time = jobStartTime;
+            while (time < jobEndTime) {
                 if (time == 13) {
                     time++;
                 }

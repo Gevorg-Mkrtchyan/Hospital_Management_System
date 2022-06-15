@@ -51,12 +51,15 @@ public class RegistrationController {
                                                 @PathVariable("date") Date date) {
         return doctorAppointmentService.getFreeTimes(doctorId, date);
     }
-    @PostMapping("registrations/{doctorID}/{date}")
-    @Operation(summary = "set free times for date doctor")
+
+    @PostMapping("registrations/{doctorID}")
+    @Operation(summary = "set start and end times for date doctor")
     @PreAuthorize("hasAuthority('employee:write')")
     public List<DoctorAppointment> setFreeTimes(@PathVariable("doctorID") Long doctorId,
-                                                @PathVariable("date") Date date) {
-        return doctorAppointmentService.setFreeTimes(doctorId, date);
+                                                @RequestParam("date") Date date,
+                                                @RequestParam("job_start_time") Long jobStartTime,
+                                                @RequestParam("job_end_time") Long jobEndTime) {
+        return doctorAppointmentService.setFreeTimes(doctorId, date, jobStartTime, jobEndTime);
     }
 
     @GetMapping("/registrations/{id}")
@@ -87,8 +90,8 @@ public class RegistrationController {
     @Operation(summary = "update by registration id")
     @PreAuthorize("hasAuthority('employee:write')")
     public ResponseEntity<?> update(@RequestBody RegistrationDto registrationDto, @PathVariable("id") Long id
-            , @PathVariable("doctor_id")Long doctor_id) {
-        Optional<RegistrationDto> registrationDtoOptional = registrationService.update(registrationDto,id,doctor_id);
+            , @PathVariable("doctor_id") Long doctor_id) {
+        Optional<RegistrationDto> registrationDtoOptional = registrationService.update(registrationDto, id, doctor_id);
         if (registrationDtoOptional.isEmpty()) {
             return new EntityUpdatingResponse<RegistrationDto>().onFailure("Registration");
         }
