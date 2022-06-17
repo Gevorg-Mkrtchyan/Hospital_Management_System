@@ -9,6 +9,7 @@ import com.example.hospital_management_system.response.EntityLookupResponse;
 import com.example.hospital_management_system.response.EntityUpdatingResponse;
 import com.example.hospital_management_system.service.StoryService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
+@SecurityRequirement(name = "hospital")
 public class StoryController {
     private final StoryService storyService;
 
@@ -35,7 +37,7 @@ public class StoryController {
         return new EntityCreatingResponse<StoryDto>().onFailure("Story");
     }
 
-    @GetMapping("/stroy/{id}")
+    @GetMapping("/story/{id}")
     @Operation(summary = "get by story id")
     @PreAuthorize("hasAuthority('employee:write')")
     public ResponseEntity<?> getById(@PathVariable("id") Long id) {
@@ -57,7 +59,7 @@ public class StoryController {
         return new EntityUpdatingResponse<StoryDto>().onSuccess(storyDtoOptional.get());
     }
 
-    @DeleteMapping("/stroy/{id}")
+    @DeleteMapping("/story/{id}")
     @Operation(summary = "delete by story id")
     @PreAuthorize("hasAuthority('employee:write')")
     public ResponseEntity<?> deleteById(@PathVariable("id") Long id) {

@@ -8,6 +8,7 @@ import com.example.hospital_management_system.response.EntityLookupResponse;
 import com.example.hospital_management_system.response.EntityUpdatingResponse;
 import com.example.hospital_management_system.service.ServicingService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +26,7 @@ public class ServicingController {
     }
 
     @PostMapping("/servicing")
-    @Operation(summary = "create servicing")
+    @Operation(summary = "create servicing",security = @SecurityRequirement(name = "hospital"))
     @PreAuthorize("hasAuthority('admin:write')")
     public ResponseEntity<?> create(@RequestBody ServicingDto servicingDto) {
         Optional<ServicingDto> servicingDtoOptional = servicingService.create(servicingDto);
@@ -36,8 +37,8 @@ public class ServicingController {
     }
 
     @GetMapping("/servicing/{id}")
-    @Operation(summary = "get by servicing id")
-    @PreAuthorize("hasAuthority('user:write')")
+    @Operation(summary = "get by servicing id",security = @SecurityRequirement(name = "hospital"))
+            @PreAuthorize("hasAuthority('user:write')")
     public ResponseEntity<?> getById(@PathVariable("id") Long id) {
         Optional<ServicingDto> servicingDtoOptional = servicingService.getById(id);
         if (servicingDtoOptional.isPresent()) {
@@ -48,13 +49,12 @@ public class ServicingController {
 
     @GetMapping("/servicing")
     @Operation(summary = "get all servicing")
-    @PreAuthorize("hasAuthority('user:write')")
     public List<Servicing> getAll() {
         return servicingService.getAll();
     }
 
-    @PutMapping("/sevicing/{id}")
-    @Operation(summary = "update by servicing id")
+    @PutMapping("/servicing/{id}")
+    @Operation(summary = "update by servicing id",security = @SecurityRequirement(name = "hospital"))
     @PreAuthorize("hasAuthority('admin:write')")
     public ResponseEntity<?> update(@RequestBody ServicingDto servicingDto, @PathVariable("id") Long id) {
         Optional<ServicingDto> servicingDtoOptional = servicingService.update(servicingDto, id);
@@ -65,7 +65,7 @@ public class ServicingController {
     }
 
     @DeleteMapping("/servicing{id}")
-    @Operation(summary = "delete by servicing id")
+    @Operation(summary = "delete by servicing id",security = @SecurityRequirement(name = "hospital"))
     @PreAuthorize("hasAuthority('admin:write')")
     public ResponseEntity<?> deleteById(@PathVariable("id") Long id) {
         Optional<ServicingDto> servicingDtoOptional = servicingService.getById(id);

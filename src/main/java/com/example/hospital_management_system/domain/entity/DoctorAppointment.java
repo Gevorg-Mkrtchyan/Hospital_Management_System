@@ -1,6 +1,7 @@
 package com.example.hospital_management_system.domain.entity;
 
 import com.example.hospital_management_system.domain.enums.AppointmentStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -20,8 +21,12 @@ public class DoctorAppointment {
     private String endTime;
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "appointment_status")
+    @JsonIgnore
     private AppointmentStatus appointmentStatus = AppointmentStatus.FREE;
-    private Long doctorId;
+    @ManyToOne
+    @JoinColumn(name = "doctorId")
+    @JsonIgnore
+    private Doctor doctor;
 
     public DoctorAppointment() {
     }
@@ -66,11 +71,11 @@ public class DoctorAppointment {
         this.appointmentStatus = appointmentStatus;
     }
 
-    public Long getDoctorId() {
-        return doctorId;
+    public Doctor getDoctor() {
+        return doctor;
     }
 
-    public void setDoctorId(Long doctorId) {
-        this.doctorId = doctorId;
+    public void setDoctor(Doctor doctor) {
+        this.doctor = doctor;
     }
 }

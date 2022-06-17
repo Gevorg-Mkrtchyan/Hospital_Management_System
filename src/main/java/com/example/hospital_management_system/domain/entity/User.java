@@ -24,6 +24,7 @@ public class User {
     private String password ;
     @Enumerated(value = EnumType.STRING)
     @Column(name = "role",nullable = false)
+    @JsonIgnore
     private Role role;
     @Enumerated(value = EnumType.STRING)
     @Column(name = "status",nullable = false)

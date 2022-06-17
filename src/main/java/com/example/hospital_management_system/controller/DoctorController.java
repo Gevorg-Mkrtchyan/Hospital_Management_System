@@ -2,6 +2,7 @@ package com.example.hospital_management_system.controller;
 
 import com.example.hospital_management_system.domain.dto.DoctorDto;
 import com.example.hospital_management_system.domain.entity.Doctor;
+import com.example.hospital_management_system.domain.entity.WorkGraphic;
 import com.example.hospital_management_system.domain.enums.Department;
 import com.example.hospital_management_system.response.EntityCreatingResponse;
 import com.example.hospital_management_system.response.EntityDeletingResponse;
@@ -9,10 +10,12 @@ import com.example.hospital_management_system.response.EntityLookupResponse;
 import com.example.hospital_management_system.response.EntityUpdatingResponse;
 import com.example.hospital_management_system.service.DoctorService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.DayOfWeek;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,7 +29,7 @@ public class DoctorController {
     }
 
     @PostMapping("/doctor")
-    @Operation(summary = "doctor create")
+    @Operation(summary = "doctor create",security = @SecurityRequirement(name = "hospital"))
     @PreAuthorize("hasAuthority('admin:write')")
     public ResponseEntity<?> create(@RequestBody DoctorDto doctorDto) {
         Optional<DoctorDto> doctorDtoOptional = doctorService.create(doctorDto);
@@ -37,7 +40,7 @@ public class DoctorController {
     }
 
     @GetMapping("/doctor/{id}")
-    @Operation(summary = "get by doctor id")
+    @Operation(summary = "get by doctor id",security = @SecurityRequirement(name = "hospital"))
     @PreAuthorize("hasAuthority('employee:write')")
     public ResponseEntity<?> getById(@PathVariable("id") Long id) {
         Optional<DoctorDto> doctorDtoOptional = doctorService.getById(id);
@@ -48,7 +51,7 @@ public class DoctorController {
     }
 
     @GetMapping("/doctor")
-    @Operation(summary = "get all doctor")
+    @Operation(summary = "get all doctor",security = @SecurityRequirement(name = "hospital"))
     @PreAuthorize("hasAuthority('user:write')")
     public List<DoctorDto> getAll() {
         return doctorService.getDoctors();
@@ -56,13 +59,26 @@ public class DoctorController {
 
     @GetMapping("/doctors/{department}")
     @Operation(summary = "get all doctor by department")
-    @PreAuthorize("hasAuthority('user:write')")
     public List<Doctor> getAllDepartment(@PathVariable("department") Department department) {
         return doctorService.getAllByDepartment(department);
     }
-
+    @PutMapping("doctor/{id}/{weekDay}/{start}/{end}")
+    @Operation(summary = "update doctor work graphic by id",security = @SecurityRequirement(name = "hospital"))
+    @PreAuthorize("hasAuthority('admin:write')")
+    public void updateWorkGraphic(@PathVariable("id") Long id,
+                                  @PathVariable("weekDay") DayOfWeek weekDay,
+                                  @PathVariable("start") int start,
+                                  @PathVariable("end") int end) {
+        doctorService.updateWorkGraphic(id, weekDay, start, end);
+    }
+    @PostMapping("doctor/graphic/{id}")
+    @Operation(summary = "add doctor work graphic by id",security = @SecurityRequirement(name = "hospital"))
+    @PreAuthorize("hasAuthority('admin:write')")
+    public void createWorkGraphic(@RequestBody WorkGraphic workGraphic, @PathVariable("id") Long doctorId) {
+        doctorService.addDoctorWorkGraphic(workGraphic,doctorId);
+    }
     @PutMapping("/doctor/{id}")
-    @Operation(summary = "update by doctor id")
+    @Operation(summary = "update by doctor id",security = @SecurityRequirement(name = "hospital"))
     @PreAuthorize("hasAuthority('admin:write')")
     public ResponseEntity<?> update(@RequestBody DoctorDto doctorDto, @PathVariable("id") Long id) {
         Optional<DoctorDto> doctorDtoOptional = doctorService.update(doctorDto, id);
@@ -73,7 +89,7 @@ public class DoctorController {
     }
 
     @DeleteMapping("/doctor/{id}")
-    @Operation(summary = "delete by doctor id")
+    @Operation(summary = "delete by doctor id",security = @SecurityRequirement(name = "hospital"))
     @PreAuthorize("hasAuthority('admin:write')")
     public ResponseEntity<?> deleteById(@PathVariable("id") Long id) {
         Optional<DoctorDto> doctorDtoOptional = doctorService.getById(id);
@@ -83,5 +99,4 @@ public class DoctorController {
         }
         return new EntityLookupResponse<DoctorDto>().onFailure("Doctor");
     }
-
 }

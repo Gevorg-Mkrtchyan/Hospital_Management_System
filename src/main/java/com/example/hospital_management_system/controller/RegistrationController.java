@@ -9,6 +9,7 @@ import com.example.hospital_management_system.response.EntityUpdatingResponse;
 import com.example.hospital_management_system.service.DoctorAppointmentService;
 import com.example.hospital_management_system.service.RegistrationService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
+@SecurityRequirement(name = "hospital")
 public class RegistrationController {
     private final RegistrationService registrationService;
     private final DoctorAppointmentService doctorAppointmentService;
@@ -31,7 +33,7 @@ public class RegistrationController {
 
     @PostMapping("/registrations/{doctor_id}/{patient_id}/{servicing_id}")
     @Operation(summary = "create registration by doctor_id,patient_id,servicing_id")
-    @PreAuthorize("hasAuthority('employee:write')")
+    @PreAuthorize("hasAuthority('user:write')")
     public ResponseEntity<?> create(@RequestBody RegistrationDto registrationDto,
                                     @PathVariable("doctor_id") Long doctorId,
                                     @PathVariable("patient_id") Long patientId,
@@ -43,25 +45,13 @@ public class RegistrationController {
         }
         return new EntityCreatingResponse<RegistrationDto>().onSuccess(registrationDtoOptional.get());
     }
-
     @GetMapping("registrations/{doctorID}/{date}")
     @Operation(summary = "get free times for date doctor")
-    @PreAuthorize("hasAuthority('employee:write')")
+    @PreAuthorize("hasAuthority('user:write')")
     public List<DoctorAppointment> getFreeTimes(@PathVariable("doctorID") Long doctorId,
                                                 @PathVariable("date") Date date) {
         return doctorAppointmentService.getFreeTimes(doctorId, date);
     }
-
-    @PostMapping("registrations/{doctorID}")
-    @Operation(summary = "set start and end times for date doctor")
-    @PreAuthorize("hasAuthority('employee:write')")
-    public List<DoctorAppointment> setFreeTimes(@PathVariable("doctorID") Long doctorId,
-                                                @RequestParam("date") Date date,
-                                                @RequestParam("job_start_time") Long jobStartTime,
-                                                @RequestParam("job_end_time") Long jobEndTime) {
-        return doctorAppointmentService.setFreeTimes(doctorId, date, jobStartTime, jobEndTime);
-    }
-
     @GetMapping("/registrations/{id}")
     @Operation(summary = "get by registration id")
     @PreAuthorize("hasAuthority('employee:write')")

@@ -13,7 +13,6 @@ public class DoctorAppointmentMapper implements BaseMapper<DoctorAppointment, Do
         doctorAppointment.setEndTime(dto.getEndTime());
         doctorAppointment.setStartTime(dto.getStartTime());
         doctorAppointment.setAppointmentStatus(dto.getAppointmentStatus());
-        doctorAppointment.setDoctorId(dto.getDoctorId());
         return doctorAppointment;
     }
 
@@ -24,7 +23,6 @@ public class DoctorAppointmentMapper implements BaseMapper<DoctorAppointment, Do
         dto.setStartTime(entity.getStartTime());
         dto.setEndTime(entity.getStartTime());
         dto.setAppointmentStatus(entity.getAppointmentStatus());
-        dto.setDoctorId(entity.getDoctorId());
         return dto;
     }
 }

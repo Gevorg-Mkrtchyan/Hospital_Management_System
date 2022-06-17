@@ -4,6 +4,7 @@ package com.example.hospital_management_system.service;
 import com.example.hospital_management_system.domain.dto.PatientDto;
 import com.example.hospital_management_system.domain.entity.Address;
 import com.example.hospital_management_system.domain.entity.Patient;
+import com.example.hospital_management_system.domain.enums.Role;
 import com.example.hospital_management_system.domain.mapper.PatientMapper;
 import com.example.hospital_management_system.repository.AddressRepository;
 import com.example.hospital_management_system.repository.PatientRepository;
@@ -45,6 +46,7 @@ public class PatientService {
             patientToSave.setAddress(existingAddress);
         }
         patientToSave.getUser().setPassword(passwordEncoder.encode(patientToSave.getUser().getPassword()));
+        patientToSave.getUser().setRole(Role.USER);
         Patient savedPatient = patientRepository.save(patientToSave);
         return Optional.of(patientMapper.convertToDto(savedPatient));
     }
@@ -89,7 +91,6 @@ public class PatientService {
         patientOptional.get().getAddress().setApartment(patientToSave.getAddress().getApartment());
         patientOptional.get().getUser().setEmail(patientToSave.getUser().getEmail());
         patientOptional.get().getUser().setPassword(passwordEncoder.encode(patientToSave.getUser().getPassword()));
-        patientOptional.get().getUser().setRole(patientToSave.getUser().getRole());
         patientOptional.get().getUser().setStatus(patientToSave.getUser().getStatus());
         Patient savedPatient = patientRepository.save(patientOptional.get());
         return Optional.of(patientMapper.convertToDto(savedPatient));

@@ -8,6 +8,7 @@ import com.example.hospital_management_system.response.EntityLookupResponse;
 import com.example.hospital_management_system.response.EntityUpdatingResponse;
 import com.example.hospital_management_system.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("api")
+@SecurityRequirement(name = "hospital")
 public class UserController {
 
     private final UserService userService;
