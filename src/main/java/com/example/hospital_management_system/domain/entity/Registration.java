@@ -6,7 +6,8 @@ import javax.persistence.*;
 import java.sql.Date;
 
 @Entity
-@Table(name = "registration")
+@Table(name = "registration" ,uniqueConstraints =
+@UniqueConstraint(columnNames = {"reg_dey","time"}))
 public class Registration {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
