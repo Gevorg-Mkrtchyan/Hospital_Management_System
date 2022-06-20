@@ -31,25 +31,27 @@ public class DoctorAppointmentService {
     public List<DoctorAppointment> getFreeTimes(Long doctorId, Date date) {
         List<Registration> registrations = registrationRepository.findRegistrationByDoctorIdAndRegDay(doctorId, date);
         if (registrations.size() == 0) {
-            WorkGraphic workGraphic=workGraphicRepository.findByDoctorIdAndWeekDay(doctorId,date.toLocalDate().getDayOfWeek());
-            Doctor doctor=doctorRepository.findById(doctorId).get();
-            int time = workGraphic.getStart();
-            int count=1;
-            while (time < workGraphic.getEnd()) {
-                DoctorAppointment doctorAppointment = new DoctorAppointment();
-                doctorAppointment.setDoctor(doctor);
-                doctorAppointment.setDate(date);
-                if(count%2!=0) {
-                    doctorAppointment.setStartTime(time + ":00");
-                    doctorAppointment.setEndTime(time + ":30");
+            if (doctorAppointmentRepository.findByDate(date).size() == 0) {
+                WorkGraphic workGraphic = workGraphicRepository.findByDoctorIdAndWeekDay(doctorId, date.toLocalDate().getDayOfWeek());
+                Doctor doctor = doctorRepository.findById(doctorId).get();
+                int time = workGraphic.getStart();
+                int count = 1;
+                while (time < workGraphic.getEnd()) {
+                    DoctorAppointment doctorAppointment = new DoctorAppointment();
+                    doctorAppointment.setDoctor(doctor);
+                    doctorAppointment.setDate(date);
+                    if (count % 2 != 0) {
+                        doctorAppointment.setStartTime(time + ":00");
+                        doctorAppointment.setEndTime(time + ":30");
+                    }
+                    if (count % 2 == 0) {
+                        doctorAppointment.setStartTime(time + ":30");
+                        doctorAppointment.setEndTime(time + 1 + ":00");
+                        time++;
+                    }
+                    count++;
+                    doctorAppointmentRepository.save(doctorAppointment);
                 }
-                if(count%2==0) {
-                    doctorAppointment.setStartTime(time + ":30");
-                    doctorAppointment.setEndTime(time + 1 + ":00");
-                    time++;
-                }
-                count++;
-                doctorAppointmentRepository.save(doctorAppointment);
             }
         }
         return doctorAppointmentRepository.findDoctorAppointmentByDoctorIdAndDateAndAppointmentStatus

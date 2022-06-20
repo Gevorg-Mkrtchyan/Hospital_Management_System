@@ -18,6 +18,8 @@ public class Doctor {
     private String name;
     @Column(name = "surname", nullable = false, length = 25)
     private String surname;
+    @Column(name = "phone",nullable = false,length = 25)
+    private String phone;
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "department", nullable = false)
     private Department department;
@@ -73,6 +75,14 @@ public class Doctor {
 
     public void setProfession(Profession profession) {
         this.profession = profession;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public Set<Registration> getRegistrations() {

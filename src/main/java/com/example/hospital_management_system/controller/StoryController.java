@@ -26,10 +26,10 @@ public class StoryController {
         this.storyService = storyService;
     }
 
-    @PostMapping("/story/{registration_id}")
+    @PostMapping("/stories/{registration-id}")
     @Operation(summary = "create story by registration_id")
     @PreAuthorize("hasAuthority('employee:write')")
-    public ResponseEntity<?> create(@RequestBody StoryDto storyDto, @PathVariable("registration_id") Long registrationId) {
+    public ResponseEntity<?> create(@RequestBody StoryDto storyDto, @PathVariable("registration-id") Long registrationId) {
         Optional<StoryDto> storyDtoOptional = storyService.create(storyDto, registrationId);
         if (storyDtoOptional.isPresent()) {
             return new EntityCreatingResponse<StoryDto>().onSuccess(storyDtoOptional.get());
@@ -37,7 +37,7 @@ public class StoryController {
         return new EntityCreatingResponse<StoryDto>().onFailure("Story");
     }
 
-    @GetMapping("/story/{id}")
+    @GetMapping("/stories/{id}")
     @Operation(summary = "get by story id")
     @PreAuthorize("hasAuthority('employee:write')")
     public ResponseEntity<?> getById(@PathVariable("id") Long id) {
@@ -48,7 +48,7 @@ public class StoryController {
         return new EntityLookupResponse<StoryDto>().onFailure("Story");
     }
 
-    @PutMapping("/story/{id}")
+    @PutMapping("/stories/{id}")
     @Operation(summary = "update by Story id")
     @PreAuthorize("hasAuthority('employee:write')")
     public ResponseEntity<?> update(@RequestBody StoryDto storyDto, @PathVariable("id") Long id) {
@@ -59,7 +59,7 @@ public class StoryController {
         return new EntityUpdatingResponse<StoryDto>().onSuccess(storyDtoOptional.get());
     }
 
-    @DeleteMapping("/story/{id}")
+    @DeleteMapping("/stories/{id}")
     @Operation(summary = "delete by story id")
     @PreAuthorize("hasAuthority('employee:write')")
     public ResponseEntity<?> deleteById(@PathVariable("id") Long id) {

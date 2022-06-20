@@ -15,6 +15,7 @@ public class DoctorMapper implements BaseMapper<Doctor, DoctorDto>{
         doctor.setSurname(dto.getSurname());
         doctor.setDepartment(dto.getDepartment());
         doctor.setProfession(dto.getProfession());
+        doctor.setPhone(dto.getPhone());
         doctor.setUser(dto.getUser());
         return doctor;
     }
@@ -26,6 +27,7 @@ public class DoctorMapper implements BaseMapper<Doctor, DoctorDto>{
         dto.setSurname(entity.getSurname());
         dto.setDepartment(entity.getDepartment());
         dto.setProfession(entity.getProfession());
+        dto.setPhone(entity.getPhone());
         dto.setUser(entity.getUser());
         return dto;
     }

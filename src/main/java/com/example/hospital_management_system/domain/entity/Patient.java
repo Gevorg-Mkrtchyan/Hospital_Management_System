@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.Pattern;
 import java.util.Set;
 
 @Entity
@@ -30,10 +31,14 @@ public class Patient {
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "blood_group", nullable = false)
     private BloodGroup bloodGroup;
-    @Column(name = "phone", nullable = false, length = 15)
+    @Pattern(regexp = "^\\+?[\\d ]{8,25}$")
+    @Column(name = "phone", nullable = false,unique = true, length = 15)
     private String phone;
     @Column(name = "ssn", nullable = false, unique = true, length = 25)
     private String ssn;
+    @Column(name = "activation_code")
+    @JsonIgnore
+    private String activationCode;
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "address_id", foreignKey = @ForeignKey(name = "address_patient_fk"))
     @JsonIgnore
@@ -104,6 +109,14 @@ public class Patient {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getActivationCode() {
+        return activationCode;
+    }
+
+    public void setActivationCode(String activationCode) {
+        this.activationCode = activationCode;
     }
 
     public String getSsn() {

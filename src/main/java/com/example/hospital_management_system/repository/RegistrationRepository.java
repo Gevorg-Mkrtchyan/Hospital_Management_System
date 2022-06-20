@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface RegistrationRepository extends JpaRepository<Registration,Long> {
     List<Registration> findRegistrationByDoctorIdAndRegDay(Long doctorID, Date regDay);
-
+    Registration findRegistrationByDoctorIdAndRegDayAndTime(Long doctorId,Date regDay,String time);
 }

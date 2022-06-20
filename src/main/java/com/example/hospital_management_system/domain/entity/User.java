@@ -28,6 +28,7 @@ public class User {
     private Role role;
     @Enumerated(value = EnumType.STRING)
     @Column(name = "status",nullable = false)
+    @JsonIgnore
     private Status status;
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     @JsonIgnore

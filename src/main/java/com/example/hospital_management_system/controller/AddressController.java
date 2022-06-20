@@ -25,7 +25,7 @@ public class AddressController {
         this.addressService = addressService;
     }
 
-    @PostMapping("/address")
+    @PostMapping("/addresses")
     @Operation(summary = "create address")
     @PreAuthorize("hasAuthority('employee:write')")
     public ResponseEntity<?> create(@RequestBody AddressDto addressDto) {
@@ -36,7 +36,7 @@ public class AddressController {
         return new EntityCreatingResponse<AddressDto>().onSuccess(addressDtoOptional.get());
     }
 
-    @GetMapping("/address/{id}")
+    @GetMapping("/addresses/{id}")
     @Operation(summary = "get by address id")
     @PreAuthorize("hasAuthority('user:write')")
     public ResponseEntity<?> getById(@PathVariable("id") Long id) {
@@ -47,7 +47,7 @@ public class AddressController {
         return new EntityLookupResponse<AddressDto>().onFailure("Address");
     }
 
-    @PutMapping("/address/{id}")
+    @PutMapping("/addresses/{id}")
     @Operation(summary = "update by address id")
     @PreAuthorize("hasAuthority('employee:write')")
     public ResponseEntity<?> update(@RequestBody AddressDto addressDto, @PathVariable("id") Long id) {
@@ -58,7 +58,7 @@ public class AddressController {
         return new EntityUpdatingResponse<AddressDto>().onSuccess(addressDtoOptional.get());
     }
 
-    @DeleteMapping("/address/{id}")
+    @DeleteMapping("/addresses/{id}")
     @Operation(summary = "delete by address id")
     @PreAuthorize("hasAuthority('employee:write')")
     public ResponseEntity<?> deleteById(@PathVariable("id") Long id) {

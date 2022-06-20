@@ -16,7 +16,6 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
-@SecurityRequirement(name = "hospital")
 public class PatientController {
     private final PatientService patientService;
 
@@ -24,9 +23,8 @@ public class PatientController {
         this.patientService = patientService;
     }
 
-    @PostMapping("/patient")
+    @PostMapping("/patients")
     @Operation(summary = "create patient")
-    @PreAuthorize("hasAuthority('employee:write')")
     public ResponseEntity<?> create(@RequestBody PatientDto patientDto) {
         Optional<PatientDto> patientDtoOptional = patientService.create(patientDto);
         if (patientDtoOptional.isEmpty()) {
@@ -35,8 +33,8 @@ public class PatientController {
         return new EntityCreatingResponse<PatientDto>().onSuccess(patientDtoOptional.get());
     }
 
-    @GetMapping("/patient/{id}")
-    @Operation(summary = "get patient by id")
+    @GetMapping("/patients_/{id}")
+    @Operation(summary = "get patient by id", security = @SecurityRequirement(name = "hospital"))
     @PreAuthorize("hasAuthority('employee:write')")
     public ResponseEntity<?> getById(@PathVariable("id") Long id) {
         Optional<PatientDto> patientDtoOptional = patientService.getById(id);
@@ -46,8 +44,8 @@ public class PatientController {
         return new EntityLookupResponse<PatientDto>().onFailure("Patient");
     }
 
-    @GetMapping("/patient")
-    @Operation(summary = "get patient by ssn")
+    @GetMapping("/patients")
+    @Operation(summary = "get patient by ssn", security = @SecurityRequirement(name = "hospital"))
     @PreAuthorize("hasAuthority('employee:write')")
     public ResponseEntity<?> getBySsn(@RequestParam("ssn") String ssn) {
         Optional<PatientDto> patientDtoOptional = patientService.getBySsn(ssn);
@@ -57,19 +55,22 @@ public class PatientController {
         return new EntityLookupResponse<PatientDto>().onFailure("Patient");
     }
 
-    @PutMapping("/patient/{id}")
-    @Operation(summary = "update patient by id")
-    @PreAuthorize("hasAuthority('employee:write')")
-    public ResponseEntity<?> update(@RequestBody PatientDto patientDto, @PathVariable("id") Long id) {
-        Optional<PatientDto> patientDtoOptional = patientService.update(patientDto, id);
+    @PutMapping("/patients/{id}/{activation-code}")
+    @Operation(summary = "update patient by id", security = @SecurityRequirement(name = "hospital"))
+    @PreAuthorize("hasAuthority('user:write')")
+    public ResponseEntity<?> update(@RequestBody PatientDto patientDto,
+                                    @PathVariable("id")Long id,
+                                    @PathVariable("activation-code")String activationCode) {
+        Optional<PatientDto> patientDtoOptional = patientService.update(patientDto, id,activationCode
+        );
         if (patientDtoOptional.isEmpty()) {
             return new EntityUpdatingResponse<PatientDto>().onFailure("Patient");
         }
         return new EntityUpdatingResponse<PatientDto>().onSuccess(patientDtoOptional.get());
     }
 
-    @DeleteMapping("/patient/{id}")
-    @Operation(summary = "delete patient by id")
+    @DeleteMapping("/patients/{id}")
+    @Operation(summary = "delete patient by id", security = @SecurityRequirement(name = "hospital"))
     @PreAuthorize("hasAuthority('employee:write')")
     public ResponseEntity<?> deleteById(@PathVariable("id") Long id) {
         Optional<PatientDto> patientDtoOptional = patientService.getById(id);
@@ -78,6 +79,16 @@ public class PatientController {
             return new EntityDeletingResponse<PatientDto>().onSuccess(patientDtoOptional.get(), "Patient");
         }
         return new EntityLookupResponse<PatientDto>().onFailure("Patient");
+    }
+    @GetMapping("/patients/{phone}")
+    @Operation(summary = "get activation code by phone number")
+    public String getActivationCode(@PathVariable("phone") String phone){
+        return patientService.getActiveCode(phone);
+    }
+    @PostMapping("/patient/{activation-code}")
+    @Operation(summary = "set activation code")
+    public String setActivationCode(@PathVariable("activation-code")String activationCode){
+        return patientService.setActiveCode(activationCode);
     }
 }
 

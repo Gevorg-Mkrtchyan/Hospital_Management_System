@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class ServicingDto {
+    private Long id;
     private String name;
     private String price;
 }

@@ -9,5 +9,7 @@ import java.util.Optional;
 @Repository
 public interface PatientRepository extends JpaRepository<Patient,Long> {
     Optional<Patient> findBySsn(String ssn);
+    Optional<Patient> findByPhone(String phone);
+    Optional<Patient> findByActivationCode(String activationCode);
 
 }

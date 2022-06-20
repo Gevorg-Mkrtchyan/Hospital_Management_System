@@ -34,7 +34,7 @@ public class UserService {
             return Optional.empty();
         }
         User userToSave = userMapper.convertToEntity(userDto);
-        userOptional.get().setEmail(userToSave.getEmail());
+//        userOptional.get().setEmail(userToSave.getEmail());
         userOptional.get().setPassword(passwordEncoder.encode(userToSave.getPassword()));
         userOptional.get().setRole(userToSave.getRole());
         userOptional.get().setStatus(userToSave.getStatus());

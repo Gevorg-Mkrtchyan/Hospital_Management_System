@@ -28,7 +28,7 @@ public class DoctorController {
         this.doctorService = doctorService;
     }
 
-    @PostMapping("/doctor")
+    @PostMapping("/doctors")
     @Operation(summary = "doctor create",security = @SecurityRequirement(name = "hospital"))
     @PreAuthorize("hasAuthority('admin:write')")
     public ResponseEntity<?> create(@RequestBody DoctorDto doctorDto) {
@@ -50,7 +50,7 @@ public class DoctorController {
         return new EntityLookupResponse<DoctorDto>().onFailure("Doctor");
     }
 
-    @GetMapping("/doctor")
+    @GetMapping("/doctors")
     @Operation(summary = "get all doctor",security = @SecurityRequirement(name = "hospital"))
     @PreAuthorize("hasAuthority('user:write')")
     public List<DoctorDto> getAll() {
@@ -62,7 +62,7 @@ public class DoctorController {
     public List<Doctor> getAllDepartment(@PathVariable("department") Department department) {
         return doctorService.getAllByDepartment(department);
     }
-    @PutMapping("doctor/{id}/{weekDay}/{start}/{end}")
+    @PutMapping("doctors/{id}/{weekDay}/{start}/{end}")
     @Operation(summary = "update doctor work graphic by id",security = @SecurityRequirement(name = "hospital"))
     @PreAuthorize("hasAuthority('admin:write')")
     public void updateWorkGraphic(@PathVariable("id") Long id,
@@ -77,7 +77,7 @@ public class DoctorController {
     public void createWorkGraphic(@RequestBody WorkGraphic workGraphic, @PathVariable("id") Long doctorId) {
         doctorService.addDoctorWorkGraphic(workGraphic,doctorId);
     }
-    @PutMapping("/doctor/{id}")
+    @PutMapping("/doctors/{id}")
     @Operation(summary = "update by doctor id",security = @SecurityRequirement(name = "hospital"))
     @PreAuthorize("hasAuthority('admin:write')")
     public ResponseEntity<?> update(@RequestBody DoctorDto doctorDto, @PathVariable("id") Long id) {
@@ -88,7 +88,7 @@ public class DoctorController {
         return new EntityUpdatingResponse<DoctorDto>().onSuccess(doctorDtoOptional.get());
     }
 
-    @DeleteMapping("/doctor/{id}")
+    @DeleteMapping("/doctors/{id}")
     @Operation(summary = "delete by doctor id",security = @SecurityRequirement(name = "hospital"))
     @PreAuthorize("hasAuthority('admin:write')")
     public ResponseEntity<?> deleteById(@PathVariable("id") Long id) {

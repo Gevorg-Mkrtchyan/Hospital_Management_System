@@ -5,9 +5,11 @@ import com.example.hospital_management_system.domain.dto.PatientDto;
 import com.example.hospital_management_system.domain.entity.Address;
 import com.example.hospital_management_system.domain.entity.Patient;
 import com.example.hospital_management_system.domain.enums.Role;
+import com.example.hospital_management_system.domain.enums.Status;
 import com.example.hospital_management_system.domain.mapper.PatientMapper;
 import com.example.hospital_management_system.repository.AddressRepository;
 import com.example.hospital_management_system.repository.PatientRepository;
+import com.example.hospital_management_system.util.MyUtil;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -47,6 +49,7 @@ public class PatientService {
         }
         patientToSave.getUser().setPassword(passwordEncoder.encode(patientToSave.getUser().getPassword()));
         patientToSave.getUser().setRole(Role.USER);
+        patientToSave.getUser().setStatus(Status.BANNED);
         Patient savedPatient = patientRepository.save(patientToSave);
         return Optional.of(patientMapper.convertToDto(savedPatient));
     }
@@ -58,7 +61,25 @@ public class PatientService {
         }
         return Optional.of(patientMapper.convertToDto(optionalPatient.get()));
     }
-
+    public String getActiveCode(String phone) {
+        Optional<Patient> patientOptional = patientRepository.findByPhone(phone);
+        if (patientOptional.isPresent()) {
+            patientOptional.get().setActivationCode(MyUtil.activationCodeGenerator());
+            patientRepository.save(patientOptional.get());
+            return patientOptional.get().getActivationCode();
+        }
+        return "no exist phone number";
+    }
+    public String  setActiveCode(String activationCode){
+        Optional<Patient>patientOptional = patientRepository.findByActivationCode(activationCode);
+        if (patientOptional.isPresent()){
+            patientOptional.get().getUser().setStatus(Status.ACTIVE);
+            patientOptional.get().setActivationCode(MyUtil.encodedActivationCode());
+            patientRepository.save(patientOptional.get());
+            return "account is activated";
+        }
+        return "no exist activated code";
+    }
     public Optional<PatientDto> getBySsn(String ssn) {
         Optional<Patient> patientOptional = patientRepository.findBySsn(ssn);
         if (patientOptional.isEmpty()) {
@@ -71,16 +92,18 @@ public class PatientService {
         patientRepository.deleteById(id);
     }
 
-    public Optional<PatientDto> update(PatientDto patientDto, Long id) {
+    public Optional<PatientDto> update(PatientDto patientDto, Long id,String activationCode) {
         Optional<Patient> patientOptional = patientRepository.findById(id);
-        if (patientOptional.isEmpty()) {
-            return Optional.empty();
-        }
+        if (patientRepository.findByActivationCode(activationCode).isEmpty()||patientOptional.isEmpty()) {
+                return Optional.empty();
+            }
+
         Patient patientToSave = patientMapper.convertToEntity(patientDto);
         patientOptional.get().setName(patientToSave.getName());
         patientOptional.get().setSurname(patientToSave.getSurname());
         patientOptional.get().setAge(patientToSave.getAge());
         patientOptional.get().setPhone(patientToSave.getPhone());
+        patientOptional.get().setActivationCode(MyUtil.encodedActivationCode());
         patientOptional.get().setGender(patientToSave.getGender());
         patientOptional.get().setBloodGroup(patientToSave.getBloodGroup());
         patientOptional.get().setSsn(patientToSave.getSsn());
@@ -91,7 +114,6 @@ public class PatientService {
         patientOptional.get().getAddress().setApartment(patientToSave.getAddress().getApartment());
         patientOptional.get().getUser().setEmail(patientToSave.getUser().getEmail());
         patientOptional.get().getUser().setPassword(passwordEncoder.encode(patientToSave.getUser().getPassword()));
-        patientOptional.get().getUser().setStatus(patientToSave.getUser().getStatus());
         Patient savedPatient = patientRepository.save(patientOptional.get());
         return Optional.of(patientMapper.convertToDto(savedPatient));
     }

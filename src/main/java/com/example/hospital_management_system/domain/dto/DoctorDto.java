@@ -13,9 +13,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class DoctorDto {
+    private Long id;
     private String name;
     private String surname;
     private Department department;
     private Profession profession;
+    private String phone;
     private User user;
 }
